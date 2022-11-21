@@ -1,0 +1,250 @@
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*::after,
+*::before{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: inherit;
+  font-family: 'Roboto', -apple-system, system-ui, sans-serif;
+}
+
+body {
+  margin: 40px 0 0;
+  display: flex;
+  justify-content: center;
+  font-family: -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #fff;
+}
+
+img{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hidden{
+  position: absolute !important;
+  width: 1px; 
+  height: 1px;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.button{
+  padding: 7px 15px;
+  min-width: 50px;
+  font-size: 14px;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.5s ease 0s;
+  background-color: #4d76d5;
+
+  &:hover {
+      background-color: darken($color: #4d76d5, $amount: 15%); //увеличиваем темноту цвета
+  }
+}
+
+.field {
+  width: 250px;
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  outline: none;
+
+  &:focus {
+    border: 1px solid #999;
+  }
+}
+
+.file{
+  &:hover{
+    label{
+      background-color: darken($color: #4d76d5, $amount: 15%);
+    }
+  }
+
+  label {
+    min-width: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.5s ease 0s;
+    background-color: #4d76d5;
+
+    span {
+      font-size: 14px;
+      color: #fff;
+    }
+  }
+}
+
+.textarea{
+  padding: 8px 12px;
+  width: 100%;
+  resize: none;
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  outline: none;
+
+  &:focus {
+    border: 1px solid #999;
+  }
+}
+
+.checkbox {
+  &:hover{
+    label {
+      background-color: #ddd;
+      border-color: #ddd;
+      img{
+        opacity: 1;
+      }
+    }
+  }
+
+  label{
+    width: 17px;
+    height: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: all 0.5s ease 0s;
+
+    img{
+      opacity: 0;
+      transition: opacity 0.5s ease 0s;
+    }
+  }
+
+  //стили для соседнего правого элемента
+  input:checked + label,
+  &:hover input:checked + label {
+    background-color: #4dd599;
+    border-color: #4dd599;
+
+    img{
+      opacity: 1;
+    }
+  }
+}
+
+///
+.todo{
+  padding: 15px 10px 25px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.todo__add-task{
+  background-color: #fff;
+}
+
+.todo__form {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.todo__input{
+  display: flex;
+}
+
+.todo__input-date{
+width: 150px;
+}
+///
+
+.todo__list{
+  margin-top: 25px;
+  list-style-type: none;
+
+}
+
+.todo__item {
+  padding: 5px 10px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.todo__item:not(:last-child){
+  margin-bottom: 15px;
+}
+
+.todo__item.limit {
+  opacity: 0.5;
+  padding-left: 37px;
+}
+
+.todo__checkbox{
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+.todo__item.limit .todo__checkbox{
+  display: none;
+}
+
+.todo__item-content{
+  flex: 1 1 auto;
+}
+
+.todo__item-title{
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.todo__item-desc{
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.todo__item-date {
+  font-size: 14px;
+  color: #999;
+}
+
+.todo__item-box{
+  margin-left: 10px;
+  width: 100px;
+} 
+
+.todo__item-box .button img {
+  width: 20px;
+  height: 10px;
+}
+
+.todo__file-box {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #999;
+}
+
+.todo__edit {
+    position: fixed;
+    padding: 15px 10px 25px;
+    top: 0;
+    left: 50%;
+    background-color: #fff;
+    transform: translateX(-50%);
+    border: 1px solid #ddd;
+    box-shadow: 0px 5px 10px 2px rgba(69, 69, 69, 0.2);
+}
