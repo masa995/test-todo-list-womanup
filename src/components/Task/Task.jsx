@@ -6,7 +6,7 @@ import checkImg from '../../assets/img/check.svg';
 import editImg from '../../assets/img/edit.svg';
 import removeImg from '../../assets/img/remove.svg';
 
-function Task({ onRemoveTask, onCompleteTask, onEditTask, limit, id, title, text, date, file, complete }) {
+function Task({ onRemoveTask, onCompleteTask, onEditTask, limit, id, title, text, date, fileName, fileUrl, complete }) {
 
   return (
     <li className={!limit ? 'todo__item limit' : 'todo__item'}>
@@ -39,13 +39,13 @@ function Task({ onRemoveTask, onCompleteTask, onEditTask, limit, id, title, text
         </button>
         <button
           className='button'
-          onClick={() => { onRemoveTask(id) }}
+          onClick={() => { onRemoveTask(id, fileUrl) }}
         >
           <img src={removeImg} alt="Удалить задачу" />
         </button>
 
         <div className='todo__file-box'>
-          <p>{file ? file.name : ''}</p>
+          <p>{fileName ? fileName : ''}</p>
         </div>
       </div>
     </li>

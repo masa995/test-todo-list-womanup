@@ -1,14 +1,43 @@
 import React from 'react';
+import { db } from './firebase';
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  deleteObject
+} from "firebase/storage";
+
+import {
+  query,
+  collection,
+  onSnapshot,
+  updateDoc,
+  doc,
+  addDoc,
+  deleteDoc,
+} from 'firebase/firestore';
+
 import { TaskForm, Task, EditTask } from './components/index'
 
 function App() {
   const [visibleEdit, setVisibleEdit] = React.useState(false);
-  // const [editTaskId, setEditTaskId] = React.useState(null);
   const [editTask, setEditTask] = React.useState(null);
-
-  const [limit, setLimit] = React.useState([])
+  const [limit, setLimit] = React.useState([]);
   const [list, setList] = React.useState([]);
-  // console.log(list);
+
+  const storage = getStorage();
+
+  React.useEffect(() => {
+    const q = query(collection(db, 'todos'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let listArr = [];
+      querySnapshot.forEach((doc) => {
+        listArr.push({ ...doc.data(), id: doc.id });
+      });
+      setList(listArr);
+    });
+    return () => unsubscribe();
+  }, []);
 
   React.useEffect(() => {
     if (list.length !== 0) {
@@ -26,15 +55,46 @@ function App() {
     }
   }, [list])
 
-  const onAddTask = (obj) => {
-    const listNew = [...list, obj];
-    setList(listNew);
+  const onAddTask = async (obj) => {
+    try {
+      await addDoc(collection(db, 'todos'), {
+        title: obj.title,
+        text: obj.text,
+        date: obj.date,
+        fileUrl: obj.fileUrl,
+        fileName: obj.fileName,
+        complete: false
+      });
+    } catch (ex) {
+      console.error(ex);
+    }
+
+    if (obj.fileUrl !== '') {
+      try {
+        const fileRef = ref(storage, obj.fileUrl);
+        await uploadBytes(fileRef, obj.file);
+      } catch (ex) {
+        console.error(ex);
+      }
+    }
   }
 
-  const onRemoveTask = (id) => {
+  const onRemoveTask = async (id, fileUrl) => {
     if (window.confirm('Выдействительно хотите удалить задачу?')) {
-      const listNew = list.filter((item) => item.id !== id);
-      setList(listNew);
+      try {
+        const docRef = doc(db, 'todos', id);
+        await deleteDoc(docRef);
+      } catch (ex) {
+        console.error(ex);
+      }
+      if (fileUrl !== '') {
+        try {
+          const fileRef = ref(storage, fileUrl);
+          await deleteObject(fileRef);
+        } catch (ex) {
+          console.error(ex);
+        }
+      }
     }
   }
 
@@ -42,30 +102,46 @@ function App() {
     const obj = list.filter((item) => item.id === id);
     setEditTask(obj[0])
     setVisibleEdit(true);
-
   }
 
-  const onUpdateTask = (obj) => {
-    console.log(obj);
-    const listNew = list.map((item) => {
-      for (let key in obj) {
-        if (item[key] !== obj[key]) {
-          item[key] = obj[key];
-        }
+  const onUpdateTask = async (obj) => {
+    const id = editTask.id;
+    try {
+      const docRef = doc(db, 'todos', id);
+      await updateDoc(docRef, {
+        title: obj.title,
+        text: obj.text,
+        date: obj.date,
+        fileUrl: obj.fileUrl,
+        fileName: obj.fileName
+      })
+    } catch (ex) {
+      console.error(ex);
+    }
+
+
+    if (editTask.fileUrl !== obj.fileUrl) {
+      try {
+        const newFileRef = ref(storage, obj.fileUrl);
+        await uploadBytes(newFileRef, obj.file);
+
+        const oldFileRef = ref(storage, editTask.fileUrl);
+        await deleteObject(oldFileRef);
+      } catch (ex) {
+        console.error(ex);
       }
-      return item
-    })
-    setList(listNew)
+    }
   }
 
-  const onCompleteTask = (id, complete) => {
-    const listNew = list.map((item) => {
-      if (id === item.id) {
-        item.complete = complete
-      }
-      return item
-    })
-    setList(listNew)
+  const onCompleteTask = async (id, complete) => {
+    try {
+      const docRef = doc(db, 'todos', id);
+      await updateDoc(docRef, {
+        complete: complete,
+      });
+    } catch (ex) {
+      console.error(ex);
+    }
   }
 
   return (
@@ -73,10 +149,8 @@ function App() {
       <TaskForm
         onAddTask={onAddTask}
       />
-
       <ul className='todo__list'>
         {list && list.map((item, index) =>
-
           <Task
             key={`task-${item.id}`}
             onRemoveTask={onRemoveTask}
@@ -97,7 +171,7 @@ function App() {
         />
       }
 
-    </div>
+    </div >
   );
 }
 

@@ -6,12 +6,16 @@ function TaskForm({ onAddTask }) {
   const [text, setText] = React.useState('');
   const [date, setDate] = React.useState('');
   const [file, setFile] = React.useState();
+  const [fileUrl, setFileUrl] = React.useState('');
+  const [fileName, setFileName] = React.useState('');
 
   const clearInputs = () => {
     setTitle('');
     setText('');
     setDate('');
     setFile('');
+    setFileUrl('');
+    setFileName('');
   }
 
   const addTask = (e) => {
@@ -23,6 +27,8 @@ function TaskForm({ onAddTask }) {
       text,
       date,
       file,
+      fileUrl,
+      fileName,
       complete: false
     }
     clearInputs();
@@ -34,6 +40,12 @@ function TaskForm({ onAddTask }) {
     if (e.target.files && e.target.files.length) {
       const fileElem = e.target.files[0];
       setFile(fileElem);
+
+      const url = `/files/${fileElem.name}`;
+      setFileUrl(url);
+
+      const name = fileElem.name;
+      setFileName(name);
     }
   }
 

@@ -7,12 +7,20 @@ function EditTask({ onUpdateTask, setVisibleEdit, editTask }) {
   const [text, setText] = React.useState(editTask.text);
   const [date, setDate] = React.useState(editTask.date);
   const [file, setFile] = React.useState();
+  const [fileUrl, setFileUrl] = React.useState(editTask.fileUrl);
+  const [fileName, setFileName] = React.useState(editTask.fileName);
 
   const saveFile = (e) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length) {
       const fileElem = e.target.files[0];
       setFile(fileElem);
+
+      const url = `/files/${fileElem.name}`;
+      setFileUrl(url);
+
+      const name = fileElem.name;
+      setFileName(name);
     }
   }
 
@@ -21,6 +29,7 @@ function EditTask({ onUpdateTask, setVisibleEdit, editTask }) {
     setText('');
     setDate('');
     setFile();
+    setFileUrl('')
   }
 
   const onEditTask = (e) => {
@@ -30,7 +39,9 @@ function EditTask({ onUpdateTask, setVisibleEdit, editTask }) {
       title,
       text,
       date,
-      file
+      file,
+      fileUrl,
+      fileName
     }
     clearInputs();
     onUpdateTask(obj);
