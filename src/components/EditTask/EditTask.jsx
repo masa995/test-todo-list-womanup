@@ -1,8 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-// import PropTypes from 'prop-types'
-
-function EditTask({ onUpdateTask, setVisibleEdit, editTask }) {
+const EditTask = ({ onUpdateTask, setVisibleEdit, editTask }) => {
   const [title, setTitle] = React.useState(editTask.title);
   const [text, setText] = React.useState(editTask.text);
   const [date, setDate] = React.useState(editTask.date);
@@ -10,6 +9,11 @@ function EditTask({ onUpdateTask, setVisibleEdit, editTask }) {
   const [fileUrl, setFileUrl] = React.useState(editTask.fileUrl);
   const [fileName, setFileName] = React.useState(editTask.fileName);
 
+  /**
+   * Функция-обработчик.
+   * Сохраняет данные для работы с файлом.
+   * @param {*} e 
+   */
   const saveFile = (e) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length) {
@@ -24,6 +28,9 @@ function EditTask({ onUpdateTask, setVisibleEdit, editTask }) {
     }
   }
 
+  /**
+   * Очищает input-ы
+   */
   const clearInputs = () => {
     setTitle('');
     setText('');
@@ -32,6 +39,11 @@ function EditTask({ onUpdateTask, setVisibleEdit, editTask }) {
     setFileUrl('')
   }
 
+  /**
+   * Функция-обработчик.
+   * Обрабатывает изменения задачи. Сохроняет новые данные.
+   * @param {*} e - событие 
+   */
   const onEditTask = (e) => {
     e.preventDefault();
 
@@ -48,6 +60,10 @@ function EditTask({ onUpdateTask, setVisibleEdit, editTask }) {
     setVisibleEdit(false);
   }
 
+  /**
+   * Функция-обработчик.
+   * Отменяет изменения задачи.
+   */
   const onEditCancel = () => {
     clearInputs();
     setVisibleEdit(false);
@@ -118,6 +134,10 @@ function EditTask({ onUpdateTask, setVisibleEdit, editTask }) {
   )
 }
 
-// EditTask.propTypes = { }
+EditTask.propTypes = {
+  onUpdateTask: PropTypes.func,
+  setVisibleEdit: PropTypes.func,
+  editTask: PropTypes.object
+}
 
 export default EditTask

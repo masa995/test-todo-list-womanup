@@ -1,7 +1,7 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
-function TaskForm({ onAddTask }) {
+const TaskForm = ({ onAddTask }) => {
   const [title, setTitle] = React.useState('');
   const [text, setText] = React.useState('');
   const [date, setDate] = React.useState('');
@@ -9,6 +9,9 @@ function TaskForm({ onAddTask }) {
   const [fileUrl, setFileUrl] = React.useState('');
   const [fileName, setFileName] = React.useState('');
 
+  /**
+   * Очищает input-ы
+   */
   const clearInputs = () => {
     setTitle('');
     setText('');
@@ -18,11 +21,15 @@ function TaskForm({ onAddTask }) {
     setFileName('');
   }
 
+  /**
+   * Функция-обработчик.
+   * Сохроняет данные для новой задачи.
+   * @param {*} e  - событие 
+   */
   const addTask = (e) => {
     e.preventDefault();
 
     const obj = {
-      id: Math.random(),
       title,
       text,
       date,
@@ -35,6 +42,11 @@ function TaskForm({ onAddTask }) {
     onAddTask(obj);
   }
 
+  /**
+   * Функция-обработчик.
+   * Сохраняет данные для работы с файлом.
+   * @param {*} e 
+   */
   const saveFile = (e) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length) {
@@ -105,6 +117,8 @@ function TaskForm({ onAddTask }) {
   )
 }
 
-// TaskForm.propTypes = {}
+TaskForm.propTypes = {
+  onAddTask: PropTypes.func
+}
 
 export default TaskForm

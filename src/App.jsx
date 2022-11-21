@@ -19,7 +19,7 @@ import {
 
 import { TaskForm, Task, EditTask } from './components/index'
 
-function App() {
+const App = () => {
   const [visibleEdit, setVisibleEdit] = React.useState(false);
   const [editTask, setEditTask] = React.useState(null);
   const [limit, setLimit] = React.useState([]);
@@ -27,6 +27,9 @@ function App() {
 
   const storage = getStorage();
 
+  /**
+   * Загружает задачи из базы данных.
+   */
   React.useEffect(() => {
     const q = query(collection(db, 'todos'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -39,6 +42,9 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  /**
+   * Проверяет истекла ли дата завершения у задач.
+   */
   React.useEffect(() => {
     if (list.length !== 0) {
       const dateNow = new Date().getTime()
@@ -55,6 +61,10 @@ function App() {
     }
   }, [list])
 
+  /**
+   * Добавляет задачу.
+   * @param {Object} obj - объект с данными для новой задачи
+   */
   const onAddTask = async (obj) => {
     try {
       await addDoc(collection(db, 'todos'), {
@@ -79,6 +89,11 @@ function App() {
     }
   }
 
+  /**
+   * Удаляет задачу.
+   * @param {string} id - id задачи
+   * @param {string} fileUrl - url, где находется файл в базе данных
+   */
   const onRemoveTask = async (id, fileUrl) => {
     if (window.confirm('Выдействительно хотите удалить задачу?')) {
       try {
@@ -98,12 +113,20 @@ function App() {
     }
   }
 
+  /**
+   * Сохраняет старые данные задачи, которую собираются обновить.
+   * @param {string} id - id задачи
+   */
   const onEditTask = (id) => {
     const obj = list.filter((item) => item.id === id);
     setEditTask(obj[0])
     setVisibleEdit(true);
   }
 
+  /**
+   * Обнавляет задачу.
+   * @param {Object} obj - новые данные для задачи
+   */
   const onUpdateTask = async (obj) => {
     const id = editTask.id;
     try {
@@ -119,8 +142,14 @@ function App() {
       console.error(ex);
     }
 
-
-    if (editTask.fileUrl !== obj.fileUrl) {
+    if ((obj.fileUrl !== '') && (editTask.fileUrl === '')) {
+      try {
+        const newFileRef = ref(storage, obj.fileUrl);
+        await uploadBytes(newFileRef, obj.file);
+      } catch (ex) {
+        console.error(ex);
+      }
+    } else if (editTask.fileUrl !== obj.fileUrl) {
       try {
         const newFileRef = ref(storage, obj.fileUrl);
         await uploadBytes(newFileRef, obj.file);
@@ -133,6 +162,11 @@ function App() {
     }
   }
 
+  /**
+   * Изменяет статус checkbox.
+   * @param {string} id - id задачи
+   * @param {boolean} complete - ключ, который показывает выполнена ли задача
+   */
   const onCompleteTask = async (id, complete) => {
     try {
       const docRef = doc(db, 'todos', id);
@@ -170,7 +204,6 @@ function App() {
           editTask={editTask}
         />
       }
-
     </div >
   );
 }

@@ -1,12 +1,12 @@
 import React from 'react'
 import dayjs from 'dayjs';
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
 import checkImg from '../../assets/img/check.svg';
 import editImg from '../../assets/img/edit.svg';
 import removeImg from '../../assets/img/remove.svg';
 
-function Task({ onRemoveTask, onCompleteTask, onEditTask, limit, id, title, text, date, fileName, fileUrl, complete }) {
+const Task = ({ onRemoveTask, onCompleteTask, onEditTask, limit, id, title, text, date, fileName, fileUrl, complete }) => {
 
   return (
     <li className={!limit ? 'todo__item limit' : 'todo__item'}>
@@ -52,6 +52,18 @@ function Task({ onRemoveTask, onCompleteTask, onEditTask, limit, id, title, text
   )
 }
 
-// Task.propTypes = {}
+Task.propTypes = {
+  onRemoveTask: PropTypes.func,
+  onCompleteTask: PropTypes.func,
+  onEditTask: PropTypes.func,
+  limit: PropTypes.bool,
+  id: PropTypes.string,
+  title: PropTypes.string,
+  text: PropTypes.string,
+  date: PropTypes.string,
+  fileName: PropTypes.string,
+  fileUrl: PropTypes.string,
+  complete: PropTypes.bool
+}
 
 export default Task
